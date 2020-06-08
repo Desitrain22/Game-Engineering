@@ -1,2 +1,5 @@
 ﻿  main.cpp
-  SDLProject.vcxproj -> C:\Users\desit\source\repos\CS-3113-Projects\P1\Simple2DScene\Debug\SDLProject.exe
+  ShaderProgram.cpp
+  Generating Code...
+  LINK : C:\Users\desit\source\repos\CS-3113-Projects\P1 Simple2DScene\Debug\SDLProject.exe not found or not built by the last incremental link; performing full link
+  SDLProject.vcxproj -> C:\Users\desit\source\repos\CS-3113-Projects\P1 Simple2DScene\Debug\SDLProject.exe
