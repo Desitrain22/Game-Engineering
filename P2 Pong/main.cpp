@@ -64,17 +64,17 @@ void Initialize() {
     //shaders for handling textures
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl"); //load shaders
 
-    //playerTextureID = LoadTexture("player.png"); //load's player image to use
     
     viewMatrix = glm::mat4(1.0f);
     
     modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::translate(modelMatrix2, glm::vec3(3.0f, 3.0f, 0.0f));
+    modelMatrix = glm::translate(modelMatrix2, glm::vec3(0.0f, 3.0f, 0.0f));
 
     modelMatrix2 = glm::mat4(1.0f);
-    modelMatrix2 = glm::translate(modelMatrix2, glm::vec3(-3.0f, -3.0f, 0.0f));
+    modelMatrix2 = glm::translate(modelMatrix2, glm::vec3(0.0f, -3.0f, 0.0f));
 
     modelMatrix3 = glm::mat4(1.0f);
+
     projectionMatrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f); //orthographic view
 
     
@@ -88,10 +88,10 @@ void Initialize() {
     glEnable(GL_BLEND);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    playerTextureID = LoadTexture("tileset.png");
-    playerTextureID2 = LoadTexture("tileset.png");
-    playerTextureID3 = LoadTexture("ball.png");
+   // Was using cool textures, but they were projecting weirdly
+   //playerTextureID = LoadTexture("tileset.png");
+   //playerTextureID2 = LoadTexture("tileset.png");
+   //playerTextureID3 = LoadTexture("ball.png");
 }
 
 void ProcessInput() {
@@ -114,35 +114,51 @@ void ProcessInput() {
 	}
 	if (keys[SDL_SCANCODE_LEFT])
 	{
-		if (player1_position.x >= -1.5)
+		if (player1_position.x >= -4.5f)
 		{
             player1_movement.x = -3;
 		}
 	}
 	if (keys[SDL_SCANCODE_RIGHT])
 	{
-		if (player1_position.x <= 7.0)
+		if (player1_position.x <= 4.0f)
 		{
             player1_movement.x += 3;
 		}
 	}
 	if (keys[SDL_SCANCODE_LCTRL])
 	{
-		if (player2_position.x >= -7.5f)
+		if (player2_position.x >= -4.5f)
 		{
 			player2_movement.x = -3;
 		}
 	}
 	if (keys[SDL_SCANCODE_LALT])
 	{
-		if (player2_position.x <= 1.0)
+		if (player2_position.x <= 4.0f)
 		{
 			player2_movement.x = 3;
 		}
 	}
 }
 
+bool checkCollision(float ballPosition, float paddlePosition)
+{
+    if ((fabs(ballPosition - paddlePosition) <= 1.25f))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 float lastTicks = 0.0f; //must be declared globally rather than inside Update()
+glm::vec3 ballPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+bool ballDirection = true; //true = moving up, false = moving down
+bool ballX = true; //true = moving eft, false = moving right
+bool gameStop = false;
 
 void Update() {
 
@@ -150,23 +166,88 @@ void Update() {
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
 
-    player1_position += player1_movement * deltaTime;
-    player2_position += player2_movement * deltaTime;
+    //If the ball is at the y boundaries, check if it hit a paddle
+    if ((ballPosition.y >= 2.75f || ballPosition.y <= -2.75f))
+    {
+        if (checkCollision(ballPosition.x, player1_position.x) || checkCollision(ballPosition.x, player2_position.x))
+        {
+            ballDirection = !ballDirection; //If the paddle hits the ball, the ball starts moving the other direction
+        }
+        else //Otherwise, the paddles are stopped, and the ball finishes it's movement passed the paddle (to look nice)
+        {
+            if (ballDirection == true)
+            {
+                if (ballPosition.y <= 3.25f)
+                {
+                    ballPosition.y += 2.0 * deltaTime;
+                    if (ballX)
+                    {
+                        ballPosition.x -= 1.34f * deltaTime;
+                    }
+                    else
+                    {
+                        ballPosition.x += 1.34 * deltaTime;
+                    }
+                }
+            }
+            else
+            {
+                if (ballPosition.y >= -3.25f)
+                {
+                    ballPosition.y -= 2.0 * deltaTime;
+                    if (ballX)
+                    {
+                        ballPosition.x -= 1.34f * deltaTime;
+                    }
+                    else
+                    {
+                        ballPosition.x += 1.34 * deltaTime;
+                    }
+                }
+            }
+            gameStop = true; //This ends the game by stopping paddle movement
+        }
+    }
 
+    if (!gameStop)
+    {
+        player1_position += player1_movement * deltaTime;
+        player2_position += player2_movement * deltaTime;
+        if (ballDirection)
+        {
+            ballPosition.y += 2.0f * deltaTime;
+        }
+        else
+        {
+            ballPosition.y -= 2.0f * deltaTime;
+        }
+
+        if (fabs(ballPosition.x) >= 4.75f)
+        {
+            ballX = !ballX;
+        }
+
+        if (ballX)
+        {
+            ballPosition.x -= 1.34f * deltaTime;
+        }
+        else
+        {
+            ballPosition.x += 1.34 * deltaTime;
+        }
+
+    }
 
     modelMatrix = glm::mat4(1.0f);
-    modelMatrix = glm::translate(modelMatrix, glm::vec3(3.0f, 3.0f, 0.0f));
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 3.5f, 0.0f));
     modelMatrix = glm::translate(modelMatrix, player2_position);
 
     modelMatrix2 = glm::mat4(1.0f);
-    modelMatrix2 = glm::translate(modelMatrix2, glm::vec3(-3.0f, -3.0f, 0.0f));
+    modelMatrix2 = glm::translate(modelMatrix2, glm::vec3(0.0f, -3.0f, 0.0f));
     modelMatrix2 = glm::translate(modelMatrix2, player1_position);
 
-
-
     modelMatrix3 = glm::mat4(1.0f);
-    //modelMatrix3 = glm::translate(modelMatrix3, glm::vec3(0.0f, -3.0f, 0.0f));
-    
+    modelMatrix3 = glm::translate(modelMatrix3, ballPosition);    
 }
 
 void Render() {
@@ -174,10 +255,10 @@ void Render() {
 
     program.SetModelMatrix(modelMatrix);
 
-    float vertices[] = { -1.0f, -0.5f, 1.0f, -0.5f, 1.0f, 0.0f, -1.0f, -0.5f, 1.0f, 0.0f, -1.0f, 0.0f }; //vertices of the triangle.
-    float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
+    float vertices[] = {-1.0f, -0.5f, 1.0f, -0.5f, 1.0f, 0.0f, -1.0f, -0.5f, 1.0f, 0.0f, -1.0f, 0.0f }; //vertices of the triangle.
+    float texCoords[] = {0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
 
-    float vertices2[] = { -0.25f, -0.25f, 0.25f, -0.25f, 0.25f, 0.25f, -0.25f, -0.25f, 0.25f, 0.25f, -0.25f, 0.25f};
+    float vertices2[] = {-0.25f, -0.25f, 0.25f, -0.25f, 0.25f, 0.25f, -0.25f, -0.25f, 0.25f, 0.25f, -0.25f, 0.25f};
 
     //rendering
     glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
@@ -188,23 +269,26 @@ void Render() {
 
     //drawing the paddles
     program.SetModelMatrix(modelMatrix);
+    program.SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 
-    glBindTexture(GL_TEXTURE_2D, playerTextureID);
+    //glBindTexture(GL_TEXTURE_2D, playerTextureID);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     program.SetModelMatrix(modelMatrix2);
+    program.SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 
-    glBindTexture(GL_TEXTURE_2D, playerTextureID2);
+    //glBindTexture(GL_TEXTURE_2D, playerTextureID2);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     //drawing ball
     
     program.SetModelMatrix(modelMatrix3);
+    program.SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
     glEnableVertexAttribArray(program.positionAttribute);
     
-    glBindTexture(GL_TEXTURE_2D, playerTextureID3);
+    //glBindTexture(GL_TEXTURE_2D, playerTextureID3);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glDisableVertexAttribArray(program.positionAttribute);
