@@ -1,0 +1,7 @@
+Controls:
+  Accel Left: Left Arrow Key
+  Accel Right: Right Arrow Key
+  Restart: Space Bar
+  
+Failure: Hitting the edge of the window (walls), or landing on the TNT area
+Success: Landing on the safe concrete tile
