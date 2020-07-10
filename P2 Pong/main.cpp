@@ -215,11 +215,11 @@ void Update() {
         player2_position += player2_movement * deltaTime;
         if (ballDirection)
         {
-            ballPosition.y += 1.5f * deltaTime;
+            ballPosition.y += 0.5f * deltaTime;
         }
         else
         {
-            ballPosition.y -= 1.5f * deltaTime;
+            ballPosition.y -= 0.5f * deltaTime;
         }
 
         if (fabs(ballPosition.x) >= 4.75f)

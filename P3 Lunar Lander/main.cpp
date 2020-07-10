@@ -289,13 +289,22 @@ void Render()
     program.SetModelMatrix(modelMatrix3);
     DrawSpriteFromTextureAtlas(&program, tilesID, 3, 4, 1);
 
+    //float vertices[] = { -5.0, -4.0, 5.0, -4.0, 5.0, -3.0, -5.0, -4.0, 5.0, -3.0, -5.0, -4.0 };
+    //float texCoords[] = { 0.0, }
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    //glBindTexture(GL_TEXTURE_2D, tntID);
 
+    //glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+    //glEnableVertexAttribArray(program.positionAttribute);
 
-    glDisableVertexAttribArray(program.positionAttribute);
-    glDisableVertexAttribArray(program.texCoordAttribute);
-    
+    //glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
+    //glEnableVertexAttribArray(program.texCoordAttribute);
+
+    //glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    //glDisableVertexAttribArray(program->positionAttribute);
+    //glDisableVertexAttribArray(program->texCoordAttribute);
+    //
     SDL_GL_SwapWindow(displayWindow);
 }
 
