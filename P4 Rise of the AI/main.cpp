@@ -165,15 +165,8 @@ void ProcessInput() {
         }
     }
     if (youLose || youWin)
-    {
-        if (keys[SDL_SCANCODE_SPACE])
-        {
-            startScreen = true;
-            youLose = false;
-            youWin = false;
-        }
-    }
-    if (!startScreen)
+    {    }
+    else if (!startScreen)
     {
         if (keys[SDL_SCANCODE_UP])
         {
@@ -486,13 +479,16 @@ void Update() {
             youLose = true;
         }
 
-        if (fabs(state.player->position.x - state.enemies[i].position.x) < .4f)
+        if (fabs(state.player->position.x - state.enemies[i].position.x) < .4f)//If we're matching the enemy x
         {
-            if (fabs(state.player->position.y - state.enemies[i].position.y) < .4f)
+            if (fabs(state.player->position.y - state.enemies[i].position.y) < .4f)//...and the y
             {
-                if (!state.enemies[i].dead)
+                if (!state.enemies[i].dead)//...and their alive
                 {
-                    youLose = true;
+                    if (state.enemies[i].animIndices == state.enemies[i].animUpAtk || state.enemies[i].animIndices == state.enemies[i].animRightAtk)
+                    {//And they're in an attack phase!
+                        youLose = true;
+                    }
                 }
             }
         }
