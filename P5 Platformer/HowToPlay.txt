@@ -1,0 +1,6 @@
+Shoot the enemies before they cross the screen!
+Don't touch the enemies, or you'll die. 
+
+Controls:
+Arrow keys: Move
+Space: Shoot
