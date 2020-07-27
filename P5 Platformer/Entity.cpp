@@ -82,7 +82,7 @@ void Entity::CheckCollisionsX(Entity* objects, int objectCount)
     }
 }
 
-void Entity::Update(float deltaTime, Entity* player, Entity* objects, int objectCount, Map *map)
+void Entity::Update(float deltaTime, Entity* player, Entity* objects, int objectCount, Map* map)
 {
 
     if (type == ENEMY || type == PLAYER)
@@ -94,7 +94,7 @@ void Entity::Update(float deltaTime, Entity* player, Entity* objects, int object
 
         if (jump)
         {
-            acceleration.y = 200.0f;
+            acceleration.y = 300.0f;
         }
         else
         {
@@ -102,13 +102,25 @@ void Entity::Update(float deltaTime, Entity* player, Entity* objects, int object
         }
 
 
-      /*  for (int i = 0; i < platformCount; i++)
-        {
-            if (CheckCollision(&platforms[i])) return;
-        }
-        */
+        /*  for (int i = 0; i < platformCount; i++)
+          {
+              if (CheckCollision(&platforms[i])) return;
+          }
+          */
 
         velocity.x = movement.x * speed;
+
+        if (type == ENEMY)
+        {
+            if (objects->position.x < position.x)
+            {
+                velocity = glm::vec3(-0.5f, velocity.y, 0.0f);
+            }
+            else
+            {
+                velocity = glm::vec3(0.5f, velocity.y, 0.0f);
+            }
+        }
 
         velocity += acceleration * deltaTime;
 
@@ -120,10 +132,10 @@ void Entity::Update(float deltaTime, Entity* player, Entity* objects, int object
         CheckCollisionsX(map);
         //CheckCollisionsX(objects, objectCount); // Fix if needed
 
-      
+        
 
         if (animIndices != NULL) {
-            if (glm::length(movement) != 0) {
+            if (glm::length(movement) != 0 || type == ENEMY) {
                 animTime += deltaTime;
 
                 if (animTime >= 0.25f)
@@ -149,7 +161,10 @@ void Entity::Update(float deltaTime, Entity* player, Entity* objects, int object
 
     modelMatrix = glm::mat4(1.0f);
     modelMatrix = glm::translate(modelMatrix, position);
+
+
     jump = false;
+
 
 }
 
@@ -272,5 +287,8 @@ void Entity::CheckCollisionsX(Map* map)
         velocity.x = 0;
         collidedRight = true;
     }
+
+  
 }
+
 

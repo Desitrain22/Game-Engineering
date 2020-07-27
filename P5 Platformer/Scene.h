@@ -12,12 +12,15 @@
 #include "Util.h"
 #include "Entity.h"
 #include "Map.h"
+#include <string>
+
 struct GameState {
     Map* map;
     Entity* player;
     Entity* enemies;
     Entity* objects;
-    int nextScene;
+    int nextScene = -1;
+    int lives = 3;
 };
 class Scene {
 public:

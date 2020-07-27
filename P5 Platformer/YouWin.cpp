@@ -17,6 +17,10 @@ unsigned int YouWin_data[] =
 };
 void YouWin::Initialize() {
 
+
+    state.nextScene = -1;
+
+
     GLuint mapTextureID = Util::LoadTexture("platformPack_tilesheet.png");
     state.map = new Map(YouWin_WIDTH, YouWin_HEIGHT, YouWin_data, mapTextureID, 1.0f, 14, 7);
     // Move over all of the player and enemy code from initialization.

@@ -6,6 +6,7 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <SDL_opengl.h>
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -50,14 +51,16 @@ void SwitchToScene(Scene* scene) {
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
 
+
 ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 
 
+Mix_Chunk* bruh;
 
 void Initialize() {
-    SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("Textured!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    displayWindow = SDL_CreateWindow("P5!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 
@@ -100,7 +103,14 @@ void Initialize() {
     sceneList[6] = new HowToPlay();
     SwitchToScene(sceneList[0]);
    
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+    Mix_Music* music;
+    music = Mix_LoadMUS("tunak.mp3"); //I'm sorry, its the only mp3 I had handy. Although if I had my way, I'd play Never GOnna Give You Up
+    Mix_PlayMusic(music, -1);
+
+    bruh = Mix_LoadWAV("bounce.wav"); //Aight this also lying around my desktop
 }
+
 
 void ProcessInput() {
     bool controls = false;
@@ -135,23 +145,22 @@ void ProcessInput() {
                     if (currentScene->state.player->collidedBottom)
                     {
                         currentScene->state.player->jump = true;
+                        Mix_PlayChannel(-1, bruh, 0);
+                        Mix_Volume(-1, MIX_MAX_VOLUME);
                     }
                     break;
                 }
 
-                else if (currentScene == sceneList[0])
-                {
-                    SwitchToScene(sceneList[6]);
-                }
                 else
                 {
-                    SwitchToScene(sceneList[0]); 
+                    currentScene->state.nextScene = 0;
+                    currentScene->state.lives = 3;
                 }
 
             case SDLK_RETURN:
-                if (!controls)
+                if (currentScene == sceneList[0])
                 {
-                    SwitchToScene(sceneList[1]);
+                    currentScene->state.nextScene = 1;
                 }
             }
             break; // SDL_KEYDOWN
@@ -193,7 +202,7 @@ void Update() {
 
     while (deltaTime >= FIXED_TIMESTEP) {
         // Update. Notice it's FIXED_TIMESTEP. Not deltaTime
-        currentScene->state.player->Update(FIXED_TIMESTEP, NULL, NULL, 0, currentScene->state.map);
+        currentScene->Update(FIXED_TIMESTEP);
 
         deltaTime -= FIXED_TIMESTEP;
     }
@@ -210,7 +219,37 @@ void Update() {
         else {
             viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 0, 0));
         }
-    }
+
+        if (currentScene->state.player->position.y < -8.0f)
+        {
+            currentScene->state.lives -= 1;
+            if (currentScene->state.lives <= 0)
+            {
+                currentScene->state.nextScene = 4;
+            }
+            else
+            {
+                currentScene->state.player->position = glm::vec3(2.0f, 0.0f, 0.0f);
+            }
+        }
+
+        if (currentScene == sceneList[2] || currentScene == sceneList[3])
+        {
+            if (currentScene->state.player->CheckCollision(currentScene->state.enemies))
+            {
+                currentScene->state.lives -= 1;
+                if (currentScene->state.lives <= 0)
+                {
+                    currentScene->state.nextScene = 4;
+                }
+                else
+                {
+                    currentScene->state.player->position = glm::vec3(2.0f, 0.0f, 0.0f);
+                }
+            }
+        }
+    }    
+
 }
 
 void Render() {
@@ -233,11 +272,22 @@ void Shutdown() {
 int main(int argc, char* argv[]) {
     Initialize();
 
+    int lives = 3;
+
     while (gameIsRunning) {
         ProcessInput();
         Update();
         Render();
-    }
+
+        lives = currentScene->state.lives;
+        if (currentScene->state.nextScene > -1)
+        {
+            lives = currentScene->state.lives;
+            SwitchToScene(sceneList[currentScene->state.nextScene]);
+            currentScene->Initialize();
+            currentScene->state.lives = lives;
+        }
+}
 
     Shutdown();
     return 0;

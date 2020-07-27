@@ -32,6 +32,8 @@ public:
     bool collidedLeft = false;
     bool collidedRight = false;
 
+    bool token = false;
+
     bool jump = false;
 
     int objectCount;
@@ -66,6 +68,7 @@ public:
     void CheckCollisionsX(Entity* objects, int objectCount);
     void CheckCollisionsX(Map* map);
     void CheckCollisionsY(Map* map);
+
 };
 /*
 #define GL_SILENCE_DEPRECATION

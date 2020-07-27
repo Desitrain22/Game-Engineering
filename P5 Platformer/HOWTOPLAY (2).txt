@@ -1,0 +1,8 @@
+Left/Right = Move
+Space = Jump
+
+Collect the Green Key-Card to unlock the door
+Avoid the bandits
+I'm currently half deaf so sound warning
+
+Have fun!

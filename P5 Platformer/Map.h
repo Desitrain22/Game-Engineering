@@ -14,9 +14,7 @@
 class Map {
     int width;
     int height;
-    unsigned int* levelData;
 
-    bool mapDone = false;
 
     GLuint textureID;
     float tile_size;
@@ -30,7 +28,12 @@ class Map {
 public:
     Map(int width, int height, unsigned int* levelData, GLuint textureID, float tile_size, int
         tile_count_x, int tile_count_y);
+
+    unsigned int* levelData;
+    bool mapDone = false;
+    bool mapProgress = false;
     void Build();
     void Render(ShaderProgram* program);
     bool IsSolid(glm::vec3 position, float* penetration_x, float* penetration_y);
+    bool GetToken(glm::vec3 position, float* penetration_x, float* penetration_y);
 };

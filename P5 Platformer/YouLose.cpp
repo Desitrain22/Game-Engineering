@@ -17,6 +17,9 @@ unsigned int YouLose_data[] =
 };
 void YouLose::Initialize() {
 
+
+    state.nextScene = -1;
+
     GLuint mapTextureID = Util::LoadTexture("platformPack_tilesheet.png");
     state.map = new Map(YouLose_WIDTH, YouLose_HEIGHT, YouLose_data, mapTextureID, 1.0f, 14, 7);
     // Move over all of the player and enemy code from initialization.
@@ -51,7 +54,7 @@ void YouLose::Update(float deltaTime) {
 void YouLose::Render(ShaderProgram* program) {
     //state.map->Render(program);
     //state.player->Render(program);
-    Util::DrawText(program, Util::LoadTexture("font2.png"), "You Win!", .5f, .0002f, glm::vec3(-3.65, 2, 0));
+    Util::DrawText(program, Util::LoadTexture("font2.png"), "You Lose!", .5f, .0002f, glm::vec3(-3.65, 2, 0));
     Util::DrawText(program, Util::LoadTexture("font2.png"), "Space: Home", .5f, .0002f, glm::vec3(-3.65, 1, 0));
 
 }
