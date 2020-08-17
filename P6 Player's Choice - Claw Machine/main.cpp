@@ -135,25 +135,27 @@ void ProcessInput() {
                     currentScene->state.nextScene = 1;
                 }
             }
-            const Uint8* keys = SDL_GetKeyboardState(NULL);
-            if (controls)
-            {
-                if (keys[SDL_SCANCODE_LEFT]) {
-                    currentScene->state.player->movement.x = -1.0f;
-                }
-                else if (keys[SDL_SCANCODE_RIGHT]) {
-                    currentScene->state.player->movement.x = 1.0f;
-                }
-                if (keys[SDL_SCANCODE_DOWN]) {
-                    currentScene->state.player->movement.y = -1.0f;
-                }
-                if (glm::length(currentScene->state.player->movement) > 1.0f) {
-                    currentScene->state.player->movement = glm::normalize(currentScene->state.player->movement);
-                }
-            }
+            break;
         }
-    }
+	}
+	const Uint8* keys = SDL_GetKeyboardState(NULL);
+	if (controls)
+	{
+		if (keys[SDL_SCANCODE_LEFT]) {
+			currentScene->state.player->movement.x = -1.0f;
+		}
+		else if (keys[SDL_SCANCODE_RIGHT]) {
+			currentScene->state.player->movement.x = 1.0f;
+		}
+		if (keys[SDL_SCANCODE_DOWN]) {
+			currentScene->state.player->movement.y = -1.0f;
+		}
+		if (glm::length(currentScene->state.player->movement) > 1.0f) {
+			currentScene->state.player->movement = glm::normalize(currentScene->state.player->movement);
+		}
+	}
 }
+
 
 
 
