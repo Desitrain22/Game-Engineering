@@ -1,0 +1,18 @@
+Left/Right: Lateral Movement
+Down: Descend Claw
+Space: Drop coin
+
+
+Collect the coins into the basket to proceed!
+
+If you hit an enemy, you drop your coin and are bumped back to the start of the level.
+
+Average time for completion on 5 trial subjects:
+
+Level 1: 27.4 seconds
+Level 2: 46.2 seconds
+Level 3: 83.7 seconds
+
+Total: 157.3 seconds (Although, I'm sure there's some speed runner out there who will find this one day and complete it in like 1 minute)
+
+Have fun!

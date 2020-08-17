@@ -106,7 +106,7 @@ void Initialize() {
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
     Mix_Music* music;
     music = Mix_LoadMUS("tunak.mp3"); //I'm sorry, its the only mp3 I had handy. Although if I had my way, I'd play Never GOnna Give You Up
-    Mix_PlayMusic(music, -1);
+    //Mix_PlayMusic(music, -1);
 
     bruh = Mix_LoadWAV("bounce.wav"); //Aight this also lying around my desktop
 }

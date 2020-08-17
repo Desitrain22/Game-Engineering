@@ -1,0 +1,4 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (P4.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  main.cpp
+C:\Users\desit\source\repos\CS-3113-Projects\P6 Player's Choice - Claw Machine\main.cpp(126,62): warning C4390: ';': empty controlled statement found; is this the intent?
+  SDLProject.vcxproj -> C:\Users\desit\source\repos\CS-3113-Projects\P6 Player's Choice - Claw Machine\Debug\SDLProject.exe
